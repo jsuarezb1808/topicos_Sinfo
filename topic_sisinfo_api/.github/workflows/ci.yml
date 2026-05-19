@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: OpenAPI drift check
+        run: npm run openapi:check
+
+      - name: Wrangler dry-run (api)
+        working-directory: workers/api
+        run: npx wrangler deploy --dry-run --outdir=dist
+
+      - name: Wrangler dry-run (ingest)
+        working-directory: workers/ingest
+        run: npx wrangler deploy --dry-run --outdir=dist
+
+      - name: Wrangler dry-run (enrich)
+        working-directory: workers/enrich
+        run: npx wrangler deploy --dry-run --outdir=dist
+
+      - name: Wrangler dry-run (match)
+        working-directory: workers/match
+        run: npx wrangler deploy --dry-run --outdir=dist
