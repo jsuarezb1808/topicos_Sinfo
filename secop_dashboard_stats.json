@@ -1,0 +1,42 @@
+[
+  {
+    "año": "2018",
+    "gasto_total": 838000000.0,
+    "gasto_formateado": "$838.000.000"
+  },
+  {
+    "año": "2020",
+    "gasto_total": 995193386.0,
+    "gasto_formateado": "$995.193.386"
+  },
+  {
+    "año": "2021",
+    "gasto_total": 29042281865.0,
+    "gasto_formateado": "$29.042.281.865"
+  },
+  {
+    "año": "2022",
+    "gasto_total": 160540344089.0,
+    "gasto_formateado": "$160.540.344.089"
+  },
+  {
+    "año": "2023",
+    "gasto_total": 95511191704.0,
+    "gasto_formateado": "$95.511.191.704"
+  },
+  {
+    "año": "2024",
+    "gasto_total": 236262268349.0,
+    "gasto_formateado": "$236.262.268.349"
+  },
+  {
+    "año": "2025",
+    "gasto_total": 1959671074174.0,
+    "gasto_formateado": "$1.959.671.074.174"
+  },
+  {
+    "año": "2026",
+    "gasto_total": 185183844681.0,
+    "gasto_formateado": "$185.183.844.681"
+  }
+]
