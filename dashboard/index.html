@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SECOP Antioquia — Visualización</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>SECOP Antioquia</h1>
+      <p>
+        Visualización de
+        <code>secop_dashboard_stats.json</code> y
+        <code>secop_antioquia_rag_chunks.json</code>
+      </p>
+    </header>
+
+    <main>
+      <div id="loading" class="loading">Cargando datos…</div>
+
+      <div id="error" class="error-banner" hidden></div>
+
+      <div id="content" hidden>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">Contratos (chunks)</div>
+            <div class="value" id="stat-contracts">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Ciudades</div>
+            <div class="value" id="stat-cities">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Años en dataset</div>
+            <div class="value" id="stat-years">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Suma valores (muestra)</div>
+            <div class="value small" id="stat-total-valor">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Último año (stats)</div>
+            <div class="value" id="stat-latest-year">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Gasto ese año</div>
+            <div class="value small" id="stat-latest-gasto">—</div>
+          </div>
+        </div>
+
+        <div class="file-tabs">
+          <button type="button" class="file-tab active" data-panel="panel-overview">
+            Resumen
+          </button>
+          <button type="button" class="file-tab" data-panel="panel-stats">
+            Dashboard stats
+          </button>
+          <button type="button" class="file-tab" data-panel="panel-chunks">
+            Contratos (RAG)
+          </button>
+        </div>
+
+        <section id="panel-overview" class="panel active">
+          <h2>Resumen general</h2>
+          <div class="charts-row">
+            <div class="chart-card">
+              <h3>Gasto total por año (dashboard stats)</h3>
+              <div class="chart-wrap">
+                <canvas id="chart-spending"></canvas>
+              </div>
+            </div>
+            <div class="chart-card">
+              <h3>Contratos por año (RAG chunks)</h3>
+              <div class="chart-wrap">
+                <canvas id="chart-chunks-year"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3>Top ciudades por número de contratos</h3>
+            <div class="chart-wrap tall">
+              <canvas id="chart-cities"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section id="panel-stats" class="panel">
+          <h2>secop_dashboard_stats.json</h2>
+          <p class="section-desc">
+            Gasto total agregado por año en contratación pública.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Año</th>
+                  <th>Gasto total</th>
+                  <th>Formateado</th>
+                </tr>
+              </thead>
+              <tbody id="stats-table-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="panel-chunks" class="panel">
+          <h2>secop_antioquia_rag_chunks.json</h2>
+          <p class="section-desc">
+            Contratos de Antioquia con metadatos y texto para RAG. Usa los filtros para
+            explorar.
+          </p>
+
+          <div class="filters">
+            <label>
+              Buscar
+              <input
+                type="search"
+                id="search"
+                placeholder="ID, entidad, ciudad, descripción…"
+              />
+            </label>
+            <label>
+              Año
+              <select id="filter-year"></select>
+            </label>
+            <label>
+              Ciudad
+              <select id="filter-city"></select>
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Año</th>
+                  <th>Ciudad</th>
+                  <th>Entidad</th>
+                  <th>Valor</th>
+                  <th>Descripción</th>
+                  <th>Enlace</th>
+                </tr>
+              </thead>
+              <tbody id="contracts-body"></tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button type="button" id="btn-prev">Anterior</button>
+            <span id="page-info">—</span>
+            <button type="button" id="btn-next">Siguiente</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
