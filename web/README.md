@@ -40,6 +40,13 @@ Para un dominio propio, pide al operador que añada el origen en `ALLOWED_ORIGIN
 
 **Nota:** Los correos actuales enlazan directamente a `GET /v1/alerts/verify` en el worker (respuesta JSON). Para que el usuario vea esta UI, el backend debe apuntar los magic links a `https://tu-app.vercel.app/alertas/verificar?token=...`.
 
+## Depuración de GET
+
+En `npm run dev` (o con `NEXT_PUBLIC_API_DEBUG=true` en `.env.local`):
+
+- **Consola del navegador:** grupos `[SECOP API GET]` con URL, status y body.
+- **Panel flotante** abajo a la derecha: «API GET» lista las últimas respuestas de `/v1/sectors`, `/v1/facets`, `/v1/health`, etc.
+
 ## Scripts
 
 - `npm run dev` — desarrollo

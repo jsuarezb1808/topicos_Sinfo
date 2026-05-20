@@ -9,6 +9,7 @@ import type {
   Sector,
   Tender,
 } from './types';
+import { isGetDebugEnabled, pushGetLog } from './api-get-log';
 
 function baseUrl(): string {
   const url = process.env.NEXT_PUBLIC_API_BASE;
@@ -29,16 +30,72 @@ export class ApiClientError extends Error {
   }
 }
 
-async function parseResponse<T>(res: Response): Promise<T> {
-  const body = await res.json();
-  if (!res.ok) {
-    const err = body as ApiError;
-    throw new ApiClientError(
-      err.error?.code ?? 'INTERNAL',
-      err.error?.message ?? 'Error desconocido',
-      err.error?.details,
-    );
+async function readJsonBody(res: Response): Promise<unknown> {
+  const text = await res.text();
+  if (!text) return null;
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return { _parseError: true, _raw: text.slice(0, 2000) };
   }
+}
+
+function throwApiError(body: unknown, status: number): never {
+  const err = body as ApiError;
+  throw new ApiClientError(
+    err.error?.code ?? 'INTERNAL',
+    err.error?.message ?? `HTTP ${status}`,
+    err.error?.details,
+  );
+}
+
+/** GET requests with optional debug logging (console + in-app panel). */
+async function fetchApiGet<T>(path: string): Promise<T> {
+  const url = `${baseUrl()}${path}`;
+  const at = new Date().toISOString();
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+    });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    if (isGetDebugEnabled()) {
+      pushGetLog({
+        path,
+        url,
+        status: 0,
+        ok: false,
+        at,
+        body: null,
+        error: message,
+      });
+    }
+    throw e;
+  }
+
+  const body = await readJsonBody(res);
+
+  if (isGetDebugEnabled()) {
+    pushGetLog({
+      path,
+      url,
+      status: res.status,
+      ok: res.ok,
+      at,
+      body,
+    });
+  }
+
+  if (!res.ok) throwApiError(body, res.status);
+  return body as T;
+}
+
+async function parseResponse<T>(res: Response): Promise<T> {
+  const body = await readJsonBody(res);
+  if (!res.ok) throwApiError(body, res.status);
   return body as T;
 }
 
@@ -54,15 +111,15 @@ async function fetchApi<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export function getSectors() {
-  return fetchApi<{ sectors: Sector[] }>('/v1/sectors');
+  return fetchApiGet<{ sectors: Sector[] }>('/v1/sectors');
 }
 
 export function getFacets() {
-  return fetchApi<FacetsResponse>('/v1/facets');
+  return fetchApiGet<FacetsResponse>('/v1/facets');
 }
 
 export function getHealth() {
-  return fetchApi<HealthResponse>('/v1/health');
+  return fetchApiGet<HealthResponse>('/v1/health');
 }
 
 export function search(body: SearchRequest) {
@@ -73,7 +130,7 @@ export function search(body: SearchRequest) {
 }
 
 export function getTender(id: string) {
-  return fetchApi<Tender>(`/v1/tenders/${encodeURIComponent(id)}`);
+  return fetchApiGet<Tender>(`/v1/tenders/${encodeURIComponent(id)}`);
 }
 
 export function createAlert(body: AlertCreateRequest) {
@@ -84,13 +141,13 @@ export function createAlert(body: AlertCreateRequest) {
 }
 
 export function verifyAlert(token: string) {
-  return fetchApi<{ ok: true; alert: Alert }>(
+  return fetchApiGet<{ ok: true; alert: Alert }>(
     `/v1/alerts/verify?token=${encodeURIComponent(token)}`,
   );
 }
 
 export function unsubscribeAlert(token: string) {
-  return fetchApi<{ ok: true }>(
+  return fetchApiGet<{ ok: true }>(
     `/v1/alerts/unsubscribe?token=${encodeURIComponent(token)}`,
   );
 }

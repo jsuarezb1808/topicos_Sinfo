@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ApiDebugPanel } from '@/components/ApiDebugPanel';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="mt-12 border-t border-[var(--color-surface-border)] py-6 text-center text-xs text-[var(--color-text-muted)]">
           Datos de SECOP II · Resúmenes generados con IA · No es un portal oficial del Estado
         </footer>
+        <ApiDebugPanel />
       </body>
     </html>
   );
