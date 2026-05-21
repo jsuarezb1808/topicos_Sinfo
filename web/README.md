@@ -40,12 +40,18 @@ Para un dominio propio, pide al operador que añada el origen en `ALLOWED_ORIGIN
 
 **Nota:** Los correos actuales enlazan directamente a `GET /v1/alerts/verify` en el worker (respuesta JSON). Para que el usuario vea esta UI, el backend debe apuntar los magic links a `https://tu-app.vercel.app/alertas/verificar?token=...`.
 
-## Depuración de GET
+## Registro de peticiones al API
 
-En `npm run dev` (o con `NEXT_PUBLIC_API_DEBUG=true` en `.env.local`):
+En la página de búsqueda, la sección **«Peticiones al backend»** (siempre visible) muestra por cada llamada:
 
-- **Consola del navegador:** grupos `[SECOP API GET]` con URL, status y body.
-- **Panel flotante** abajo a la derecha: «API GET» lista las últimas respuestas de `/v1/sectors`, `/v1/facets`, `/v1/health`, etc.
+- Método y ruta
+- Fecha/hora
+- Cuerpo del **request**
+- **Response** del servidor (o error de red)
+
+Al pulsar **Buscar** se limpia el historial y se registra el `POST /v1/search`. Los GET de catálogo (`/v1/sectors`, `/v1/facets`) aparecen al cargar la página hasta la primera búsqueda.
+
+Con `NEXT_PUBLIC_API_DEBUG=true` o en `npm run dev`, lo mismo se imprime en la consola como `[SECOP API]`.
 
 ## Scripts
 

@@ -2,11 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ApiClientError, getFacets, getSectors, search } from '@/lib/api';
+import { clearApiRequestLog } from '@/lib/api-request-log';
 import type { AlertFormState, FacetsResponse, SearchFilters, SearchHit, Sector } from '@/lib/types';
 import { parseOptionalCop } from '@/lib/format';
 import { segmentLabel, segmentOptionLabel } from '@/lib/unspsc';
 import { AlertModal } from './AlertModal';
 import { HealthFooter } from './HealthFooter';
+import { RequestLogPanel } from './RequestLogPanel';
 import { TenderCard } from './TenderCard';
 
 const DEFAULT_QUERY = 'servicios para pymes';
@@ -46,6 +48,7 @@ export function SearchView() {
 
   const runSearch = useCallback(async (f: SearchFilters) => {
     if (!f.query.trim()) return;
+    clearApiRequestLog();
     setLoading(true);
     setError(null);
     try {
@@ -282,6 +285,8 @@ export function SearchView() {
           </ul>
         </section>
       </div>
+
+      <RequestLogPanel />
 
       <HealthFooter />
 

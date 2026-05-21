@@ -2,79 +2,49 @@
 
 import { useEffect, useState } from 'react';
 import {
-  clearGetLog,
-  getGetRequestLog,
-  isGetDebugEnabled,
-  subscribeGetLog,
-  type GetLogEntry,
-} from '@/lib/api-get-log';
+  clearApiRequestLog,
+  formatLogDate,
+  getApiRequestLog,
+  isApiLogEnabled,
+  subscribeApiRequestLog,
+  type ApiRequestLogEntry,
+} from '@/lib/api-request-log';
 
+/** Panel flotante opcional (dev / NEXT_PUBLIC_API_DEBUG) en rutas fuera de búsqueda. */
 export function ApiDebugPanel() {
   const [open, setOpen] = useState(false);
-  const [log, setLog] = useState<readonly GetLogEntry[]>([]);
+  const [log, setLog] = useState<readonly ApiRequestLogEntry[]>([]);
 
   useEffect(() => {
-    if (!isGetDebugEnabled()) return;
-    setLog(getGetRequestLog());
-    return subscribeGetLog(() => setLog(getGetRequestLog()));
+    if (!isApiLogEnabled()) return;
+    setLog(getApiRequestLog());
+    return subscribeApiRequestLog(() => setLog(getApiRequestLog()));
   }, []);
 
-  if (!isGetDebugEnabled()) return null;
+  if (!isApiLogEnabled()) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-[100] max-w-md text-xs">
+    <div className="fixed bottom-4 right-4 z-[100] max-w-sm text-xs">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-raised)] px-3 py-2 font-medium shadow-lg hover:border-[var(--color-accent)]"
+        className="rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-raised)] px-3 py-2 font-medium shadow-lg"
       >
-        API GET {open ? '▾' : '▸'} ({log.length})
+        API log {open ? '▾' : '▸'} ({log.length})
       </button>
-
       {open && (
-        <div className="mt-2 max-h-[min(50vh,400px)] overflow-hidden rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-raised)] shadow-xl">
-          <div className="flex items-center justify-between border-b border-[var(--color-surface-border)] px-3 py-2">
-            <span className="font-semibold text-[var(--color-accent)]">Respuestas GET</span>
-            <button
-              type="button"
-              onClick={() => clearGetLog()}
-              className="text-[var(--color-text-muted)] hover:text-white"
-            >
-              Limpiar
-            </button>
-          </div>
-          <ul className="max-h-[360px] overflow-y-auto">
-            {log.length === 0 && (
-              <li className="px-3 py-4 text-[var(--color-text-muted)]">
-                Aún no hay peticiones GET. Recarga la página o navega.
-              </li>
-            )}
-            {log.map((entry, i) => (
-              <li
-                key={`${entry.at}-${entry.path}-${i}`}
-                className="border-b border-[var(--color-surface-border)] px-3 py-2 last:border-0"
-              >
-                <div className="flex flex-wrap items-center gap-2">
-                  <span
-                    className={
-                      entry.ok
-                        ? 'rounded bg-green-950/60 px-1.5 py-0.5 text-green-400'
-                        : 'rounded bg-red-950/60 px-1.5 py-0.5 text-red-400'
-                    }
-                  >
-                    {entry.status || 'NET'}
-                  </span>
-                  <code className="text-[var(--color-text)]">{entry.path}</code>
-                </div>
-                {entry.error && (
-                  <p className="mt-1 text-red-400">{entry.error}</p>
-                )}
-                <pre className="mt-1 max-h-32 overflow-auto whitespace-pre-wrap break-all rounded bg-[var(--color-surface)] p-2 text-[10px] text-[var(--color-text-muted)]">
-                  {JSON.stringify(entry.body, null, 2)}
-                </pre>
-              </li>
-            ))}
-          </ul>
+        <div className="mt-2 max-h-80 overflow-y-auto rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-raised)] p-2 shadow-xl">
+          <button type="button" onClick={() => clearApiRequestLog()} className="mb-2 text-[var(--color-text-muted)]">
+            Limpiar
+          </button>
+          {log.map((e) => (
+            <div key={e.id} className="mb-2 border-b border-[var(--color-surface-border)] pb-2">
+              <div>
+                {e.method} {e.path} · {e.status}
+              </div>
+              <div className="text-[var(--color-text-muted)]">{formatLogDate(e.at)}</div>
+            </div>
+          ))}
         </div>
       )}
     </div>
