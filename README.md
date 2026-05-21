@@ -201,3 +201,54 @@ El dataset más antiguo disponible tiene fecha de inicio de contrato en 2015; no
 | Tiempo backfill inicial (plan gratuito 8k neurons/día) | ~3 días al ritmo natural del cron |
  
 ---
+## Cómo correrlo en local
+ 
+**Requisitos:** Node 20+, Turso CLI, cuenta de Cloudflare con Workers AI habilitado, cuenta de Resend.
+ 
+```bash
+# 1. Instalar dependencias y crear la base de datos
+brew install tursodatabase/tap/turso   # una vez
+turso auth login
+turso db create secop --location iad
+turso db shell secop < migrations/0001_init.sql
+turso db shell secop < migrations/0002_ai_usage.sql
+turso db shell secop < migrations/0003_kv.sql
+ 
+# 2. Copiar variables de entorno y completarlas
+cp .env.example .env
+# Editar .env: TURSO_URL (libsql://...), TURSO_TOKEN, RESEND_API_KEY, SOCRATA_APP_TOKEN (opcional)
+ 
+# 3. Instalar dependencias de todos los workers
+npm install   # desde la raíz del monorepo (workspaces)
+ 
+# 4. Publicar secretos y desplegar el worker de API
+cd workers/api
+echo "$TURSO_URL"   | npx wrangler secret put TURSO_URL
+cat ../../.turso-token | npx wrangler secret put TURSO_TOKEN
+openssl rand -base64 48 | npx wrangler secret put HMAC_SECRET
+echo "$RESEND_API_KEY"  | npx wrangler secret put RESEND_API_KEY
+npx wrangler deploy
+ 
+# 5. Verificar y lanzar el backfill inicial
+curl https://secop-api.<account>.workers.dev/v1/health
+curl -X POST -H "Authorization: Bearer $ADMIN_TOKEN" \
+  "https://secop-ingest.<account>.workers.dev/admin/backfill?since="
+```
+ 
+Para desplegar los workers de ingest, enrich y match ver los pasos completos de cada fase en [RUNBOOK.md](./RUNBOOK.md).
+ 
+### Frontend
+ 
+```bash
+cd web
+cp .env.example .env.local   # configurar NEXT_PUBLIC_API_BASE
+npm install
+npm run dev
+```
+ 
+Documentación de los endpoints que consume: `API.md`.
+ 
+---
+ 
+*Datos fuente: SECOP II — Departamento Nacional de Planeación, Colombia. Dominio público.*  
+*Última actualización del dataset: mayo 2025.*
