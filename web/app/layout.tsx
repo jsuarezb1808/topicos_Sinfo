@@ -1,41 +1,45 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { ApiDebugPanel } from '@/components/ApiDebugPanel';
+import { ConvocaLogo } from '@/components/ConvocaLogo';
 import './globals.css';
 
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
 export const metadata: Metadata = {
-  title: 'SECOP — Búsqueda semántica para PYMES',
+  title: 'Convoca — Licitaciones SECOP II para PYMES',
   description:
-    'Buscador semántico de licitaciones SECOP II con resúmenes automáticos y alertas por correo.',
+    'Convoca: búsqueda semántica de licitaciones SECOP II, resúmenes automáticos y alertas por correo para PYMES en Colombia.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" className={inter.variable}>
       <body className="antialiased">
-        <header className="border-b border-[var(--color-surface-border)] bg-[var(--color-surface-raised)]">
+        <header className="border-b border-[var(--c-border)] bg-[var(--c-bg-elevated)]">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
-            <Link href="/" className="group flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--color-accent)] text-sm font-bold text-white">
-                S
-              </span>
-              <span>
-                <span className="block text-sm font-semibold tracking-tight group-hover:text-[var(--color-accent)]">
-                  SECOP PYMES
-                </span>
-                <span className="block text-xs text-[var(--color-text-muted)]">
-                  Búsqueda semántica de licitaciones
-                </span>
+            <Link href="/" className="group flex items-center gap-3" aria-label="Convoca — inicio">
+              <ConvocaLogo height={36} />
+              <span className="hidden border-l border-[var(--c-border)] pl-3 text-xs text-[var(--c-fg-muted)] sm:block">
+                Búsqueda semántica
+                <br />
+                Licitaciones SECOP II
               </span>
             </Link>
-            <p className="hidden text-sm text-[var(--color-text-muted)] sm:block">
+            <p className="hidden text-sm text-[var(--c-fg-muted)] sm:block">
               Colombia · SECOP II activas
             </p>
           </div>
         </header>
         <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-        <footer className="mt-12 border-t border-[var(--color-surface-border)] py-6 text-center text-xs text-[var(--color-text-muted)]">
-          Datos de SECOP II · Resúmenes generados con IA · No es un portal oficial del Estado
+        <footer className="mt-12 border-t border-[var(--c-border)] py-6 text-center text-xs text-[var(--c-fg-muted)]">
+          Convoca · Datos de SECOP II · Resúmenes generados con IA · No es un portal oficial del
+          Estado
         </footer>
         <ApiDebugPanel />
       </body>

@@ -1,27 +1,191 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-surface: #0f1419;
-  --color-surface-raised: #1a2332;
-  --color-surface-border: #2d3a4f;
-  --color-accent: #3b82f6;
-  --color-accent-muted: #1e3a5f;
-  --color-success: #22c55e;
-  --color-warning: #eab308;
-  --color-text: #e8edf4;
-  --color-text-muted: #94a3b8;
-  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+/* ============================================================
+   Convoca — Design Tokens
+   Source: brand/convoca.css (kept in sync). Civic + modern palette.
+   ============================================================ */
+
+:root {
+  /* --- Primary: Convoca Indigo --- */
+  --c-indigo-50:  #EEF0FB;
+  --c-indigo-100: #DDE2F7;
+  --c-indigo-200: #B9C2EF;
+  --c-indigo-300: #8A98E0;
+  --c-indigo-400: #5B6BCC;
+  --c-indigo-500: #3D4FB8;
+  --c-indigo-600: #2E3D9F;
+  --c-indigo-700: #1E2A78;
+  --c-indigo-800: #182159;
+  --c-indigo-900: #11173B;
+
+  /* --- Accent: Pregón Amber --- */
+  --c-amber-50:   #FEF7E7;
+  --c-amber-100:  #FDE9BB;
+  --c-amber-200:  #FCD685;
+  --c-amber-300:  #FAC04F;
+  --c-amber-400:  #F4A93C;
+  --c-amber-500:  #DC8E1F;
+  --c-amber-600:  #B5710F;
+  --c-amber-700:  #8A560A;
+
+  /* --- Neutrals: Niebla (warm gray) --- */
+  --c-niebla-0:   #FFFFFF;
+  --c-niebla-50:  #F8F7F4;
+  --c-niebla-100: #EFEDE7;
+  --c-niebla-200: #D9D6CD;
+  --c-niebla-300: #B5B0A2;
+  --c-niebla-400: #8B8674;
+  --c-niebla-500: #5E5B4F;
+  --c-niebla-700: #2E2C25;
+  --c-niebla-900: #16150F;
+
+  /* --- Semantic statuses --- */
+  --c-selva-500:  #1F8F5F;
+  --c-selva-100:  #D5EFE0;
+  --c-coral-500:  #C4513F;
+  --c-coral-100:  #F7DAD3;
+
+  /* --- Semantic aliases --- */
+  --c-bg:           var(--c-niebla-50);
+  --c-bg-elevated:  var(--c-niebla-0);
+  --c-bg-subtle:    var(--c-niebla-100);
+
+  --c-fg:           var(--c-niebla-700);
+  --c-fg-muted:     var(--c-niebla-500);
+  --c-fg-subtle:    var(--c-niebla-400);
+  --c-fg-on-primary: var(--c-niebla-0);
+
+  --c-border:        var(--c-niebla-200);
+  --c-border-strong: var(--c-niebla-300);
+
+  --c-primary:       var(--c-indigo-700);
+  --c-primary-hover: var(--c-indigo-600);
+  --c-primary-soft:  var(--c-indigo-100);
+  --c-primary-fg:    var(--c-niebla-0);
+
+  --c-accent:        var(--c-amber-400);
+  --c-accent-hover:  var(--c-amber-500);
+  --c-accent-soft:   var(--c-amber-100);
+  --c-accent-fg:     var(--c-niebla-900);
+
+  --c-link:          var(--c-indigo-500);
+  --c-focus-ring:    color-mix(in oklab, var(--c-indigo-500) 50%, transparent);
+
+  --c-success:       var(--c-selva-500);
+  --c-success-soft:  var(--c-selva-100);
+  --c-danger:        var(--c-coral-500);
+  --c-danger-soft:   var(--c-coral-100);
+  --c-warning:       var(--c-amber-500);
+
+  /* --- Type --- */
+  --c-font-sans: var(--font-inter), "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --c-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- Radius + elevation --- */
+  --c-radius-sm: 6px;
+  --c-radius:    10px;
+  --c-radius-lg: 16px;
+  --c-radius-pill: 999px;
+
+  --c-shadow-sm: 0 1px 2px rgba(17, 23, 59, 0.06);
+  --c-shadow:    0 4px 12px rgba(17, 23, 59, 0.08);
+  --c-shadow-lg: 0 16px 40px rgba(17, 23, 59, 0.14);
+
+  /* --- Legacy aliases — keep existing component classes working --- */
+  --color-surface:        var(--c-bg);
+  --color-surface-raised: var(--c-bg-elevated);
+  --color-surface-border: var(--c-border);
+  --color-accent:         var(--c-primary);
+  --color-accent-muted:   var(--c-primary-soft);
+  --color-success:        var(--c-success);
+  --color-warning:        var(--c-warning);
+  --color-text:           var(--c-fg);
+  --color-text-muted:     var(--c-fg-muted);
 }
 
-html {
-  color-scheme: dark;
+[data-theme='dark'] {
+  --c-bg:           #0E1230;
+  --c-bg-elevated:  #161B45;
+  --c-bg-subtle:    #1D2456;
+
+  --c-fg:           #E7E9F5;
+  --c-fg-muted:     #9CA2C2;
+  --c-fg-subtle:    #6C729A;
+  --c-fg-on-primary: var(--c-niebla-0);
+
+  --c-border:        #2A3168;
+  --c-border-strong: #3A4280;
+
+  --c-primary:       var(--c-indigo-300);
+  --c-primary-hover: var(--c-indigo-200);
+  --c-primary-soft:  #1B2256;
+  --c-primary-fg:    #0E1230;
+
+  --c-accent:        var(--c-amber-300);
+  --c-accent-hover:  var(--c-amber-200);
+  --c-accent-soft:   #3A2A0E;
+  --c-accent-fg:     #0E1230;
+
+  --c-link:          var(--c-indigo-300);
+  --c-focus-ring:    color-mix(in oklab, var(--c-indigo-300) 60%, transparent);
+
+  --c-success-soft:  #0F3324;
+  --c-danger-soft:   #3A1C16;
+
+  --c-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --c-shadow:    0 4px 12px rgba(0, 0, 0, 0.45);
+  --c-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --c-bg:           #0E1230;
+    --c-bg-elevated:  #161B45;
+    --c-bg-subtle:    #1D2456;
+
+    --c-fg:           #E7E9F5;
+    --c-fg-muted:     #9CA2C2;
+    --c-fg-subtle:    #6C729A;
+
+    --c-border:        #2A3168;
+    --c-border-strong: #3A4280;
+
+    --c-primary:       var(--c-indigo-300);
+    --c-primary-hover: var(--c-indigo-200);
+    --c-primary-soft:  #1B2256;
+    --c-primary-fg:    #0E1230;
+
+    --c-accent:        var(--c-amber-300);
+    --c-accent-hover:  var(--c-amber-200);
+    --c-accent-soft:   #3A2A0E;
+    --c-accent-fg:     #0E1230;
+
+    --c-link:          var(--c-indigo-300);
+    --c-focus-ring:    color-mix(in oklab, var(--c-indigo-300) 60%, transparent);
+
+    --c-success-soft:  #0F3324;
+    --c-danger-soft:   #3A1C16;
+
+    --c-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --c-shadow:    0 4px 12px rgba(0, 0, 0, 0.45);
+    --c-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+  }
 }
 
 body {
-  font-family: var(--font-sans);
-  background: var(--color-surface);
-  color: var(--color-text);
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-fg);
+  font-family: var(--c-font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   min-height: 100vh;
+}
+
+a {
+  color: var(--c-link);
 }
 
 input,
@@ -29,23 +193,29 @@ select,
 textarea,
 button {
   font-family: inherit;
+  color: inherit;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--c-focus-ring);
   outline-offset: 2px;
+  border-radius: var(--c-radius-sm);
 }
 
 .input {
   width: 100%;
-  border-radius: 0.5rem;
-  border: 1px solid var(--color-surface-border);
-  background: var(--color-surface);
+  border-radius: var(--c-radius-sm);
+  border: 1px solid var(--c-border);
+  background: var(--c-bg-elevated);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
-  color: var(--color-text);
+  color: var(--c-fg);
+}
+
+.input::placeholder {
+  color: var(--c-fg-subtle);
 }
 
 .input:focus {
-  border-color: var(--color-accent);
+  border-color: var(--c-primary);
 }

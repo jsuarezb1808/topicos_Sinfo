@@ -53,7 +53,7 @@ function VerifyContent() {
   if (status === 'ok' && alert) {
     return (
       <div className="space-y-4">
-        <p className="rounded-lg bg-green-950/40 p-4 text-green-300">
+        <p className="rounded-lg bg-[var(--c-success-soft)] p-4 text-[var(--c-success)]">
           Alerta confirmada para <strong>{alert.email}</strong>.
         </p>
         <p className="text-sm text-[var(--color-text-muted)]">
@@ -62,7 +62,7 @@ function VerifyContent() {
         <button
           type="button"
           onClick={() => router.push(`/alertas/${encodeURIComponent(alert.id)}`)}
-          className="rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white"
+          className="rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-[var(--c-primary-fg)] hover:bg-[var(--c-primary-hover)]"
         >
           Gestionar alerta
         </button>
@@ -79,13 +79,13 @@ function VerifyContent() {
         Confirma tu alerta por correo. El enlace es válido 24 horas.
       </p>
       {status === 'error' && message && (
-        <p className="rounded-lg bg-red-950/40 p-4 text-sm text-red-300">{message}</p>
+        <p className="rounded-lg bg-[var(--c-danger-soft)] p-4 text-sm text-[var(--c-danger)]">{message}</p>
       )}
       <button
         type="button"
         onClick={handleConfirm}
         disabled={status === 'loading'}
-        className="rounded-lg bg-[var(--color-success)] px-6 py-2.5 font-medium text-white disabled:opacity-50"
+        className="rounded-lg bg-[var(--color-success)] px-6 py-2.5 font-medium text-[var(--c-fg-on-primary)] disabled:opacity-50"
       >
         {status === 'loading' ? 'Confirmando…' : 'Confirmar mi alerta'}
       </button>

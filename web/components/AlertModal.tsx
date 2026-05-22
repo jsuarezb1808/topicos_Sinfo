@@ -104,7 +104,7 @@ export function AlertModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[color-mix(in_oklab,var(--c-niebla-900)_55%,transparent)] p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="alert-modal-title"
@@ -117,7 +117,7 @@ export function AlertModal({
           <button
             type="button"
             onClick={handleClose}
-            className="text-[var(--color-text-muted)] hover:text-white"
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
             aria-label="Cerrar"
           >
             ✕
@@ -137,7 +137,7 @@ export function AlertModal({
             <button
               type="button"
               onClick={handleClose}
-              className="w-full rounded-lg bg-[var(--color-accent)] py-2 text-sm font-medium text-white"
+              className="w-full rounded-lg bg-[var(--color-accent)] py-2 text-sm font-medium text-[var(--c-primary-fg)] hover:bg-[var(--c-primary-hover)]"
             >
               Entendido
             </button>
@@ -255,13 +255,13 @@ export function AlertModal({
             </Field>
 
             {error && (
-              <p className="rounded bg-red-950/50 px-3 py-2 text-red-300">{error}</p>
+              <p className="rounded bg-[var(--c-danger-soft)] px-3 py-2 text-[var(--c-danger)]">{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-[var(--color-success)] py-2.5 font-medium text-white disabled:opacity-50"
+              className="w-full rounded-lg bg-[var(--color-success)] py-2.5 font-medium text-[var(--c-fg-on-primary)] disabled:opacity-50"
             >
               {loading ? 'Enviando…' : 'Crear alerta'}
             </button>
@@ -290,7 +290,7 @@ function Field({
       </span>
       {children}
       {hint && <span className="mt-0.5 block text-xs text-[var(--color-text-muted)]">{hint}</span>}
-      {error && <span className="mt-0.5 block text-xs text-red-400">{error}</span>}
+      {error && <span className="mt-0.5 block text-xs text-[var(--c-danger)]">{error}</span>}
     </label>
   );
 }

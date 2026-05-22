@@ -63,7 +63,7 @@ export default function TenderDetailPage() {
   if (error || !tender) {
     return (
       <div className="space-y-4">
-        <p className="text-red-300">{error ?? 'Error desconocido'}</p>
+        <p className="text-[var(--c-danger)]">{error ?? 'Error desconocido'}</p>
         <Link href="/" className="text-[var(--color-accent)] hover:underline">
           ← Volver a la búsqueda
         </Link>
@@ -123,11 +123,16 @@ export default function TenderDetailPage() {
         <Detail label="Estado" value={tender.estado} />
         <Detail label="Fase" value={tender.fase} />
         <Detail label="Tipo de contrato" value={tender.tipo_contrato} />
+        <Detail label="Subtipo de contrato" value={tender.subtipo_contrato} />
         <Detail label="Publicación" value={formatDate(tender.fecha_publicacion)} />
         <Detail label="Última actualización" value={formatDate(tender.fecha_ultima)} />
         <Detail label="Cierre recepción" value={formatDate(tender.fecha_recepcion)} />
         <Detail label="UNSPSC" value={tender.unspsc} />
+        <Detail label="Departamento" value={tender.departamento} />
+        <Detail label="Ciudad" value={tender.ciudad} />
+        <Detail label="Entidad" value={tender.entidad} />
         <Detail label="NIT entidad" value={tender.nit_entidad} />
+        <Detail label="ID SECOP" value={tender.id} />
       </dl>
 
       <div className="flex flex-wrap gap-3 pt-2">
@@ -136,7 +141,7 @@ export default function TenderDetailPage() {
             href={tender.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-white"
+            className="rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-[var(--c-primary-fg)] hover:bg-[var(--c-primary-hover)]"
           >
             Abrir en SECOP ↗
           </a>

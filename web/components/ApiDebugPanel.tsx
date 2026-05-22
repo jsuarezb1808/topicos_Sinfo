@@ -38,7 +38,7 @@ export function ApiDebugPanel() {
             <button
               type="button"
               onClick={() => clearGetLog()}
-              className="text-[var(--color-text-muted)] hover:text-white"
+              className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
             >
               Limpiar
             </button>
@@ -58,8 +58,8 @@ export function ApiDebugPanel() {
                   <span
                     className={
                       entry.ok
-                        ? 'rounded bg-green-950/60 px-1.5 py-0.5 text-green-400'
-                        : 'rounded bg-red-950/60 px-1.5 py-0.5 text-red-400'
+                        ? 'rounded bg-[var(--c-success-soft)] px-1.5 py-0.5 text-[var(--c-success)]'
+                        : 'rounded bg-[var(--c-danger-soft)] px-1.5 py-0.5 text-[var(--c-danger)]'
                     }
                   >
                     {entry.status || 'NET'}
@@ -67,7 +67,7 @@ export function ApiDebugPanel() {
                   <code className="text-[var(--color-text)]">{entry.path}</code>
                 </div>
                 {entry.error && (
-                  <p className="mt-1 text-red-400">{entry.error}</p>
+                  <p className="mt-1 text-[var(--c-danger)]">{entry.error}</p>
                 )}
                 <pre className="mt-1 max-h-32 overflow-auto whitespace-pre-wrap break-all rounded bg-[var(--color-surface)] p-2 text-[10px] text-[var(--color-text-muted)]">
                   {JSON.stringify(entry.body, null, 2)}

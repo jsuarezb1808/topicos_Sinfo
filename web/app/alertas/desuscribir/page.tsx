@@ -41,12 +41,12 @@ function UnsubscribeContent() {
   if (status === 'ok') {
     return (
       <div className="space-y-4">
-        <p className="rounded-lg bg-green-950/40 p-4 text-green-300">
+        <p className="rounded-lg bg-[var(--c-success-soft)] p-4 text-[var(--c-success)]">
           Te desuscribimos de esta alerta. Ya no recibirás correos para esta búsqueda.
         </p>
         <Link
           href="/"
-          className="inline-block rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white"
+          className="inline-block rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-[var(--c-primary-fg)] hover:bg-[var(--c-primary-hover)]"
         >
           Agregar otra alerta
         </Link>
@@ -60,13 +60,13 @@ function UnsubscribeContent() {
         Dejarás de recibir correos cuando aparezcan licitaciones que coincidan con esta alerta.
       </p>
       {status === 'error' && message && (
-        <p className="rounded-lg bg-red-950/40 p-4 text-sm text-red-300">{message}</p>
+        <p className="rounded-lg bg-[var(--c-danger-soft)] p-4 text-sm text-[var(--c-danger)]">{message}</p>
       )}
       <button
         type="button"
         onClick={handleUnsubscribe}
         disabled={status === 'loading'}
-        className="rounded-lg bg-red-700 px-6 py-2.5 font-medium text-white disabled:opacity-50"
+        className="rounded-lg bg-[var(--c-danger)] px-6 py-2.5 font-medium text-[var(--c-fg-on-primary)] hover:opacity-90 disabled:opacity-50"
       >
         {status === 'loading' ? 'Procesando…' : 'Confirmar desuscripción'}
       </button>

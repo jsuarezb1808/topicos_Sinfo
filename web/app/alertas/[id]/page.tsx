@@ -12,7 +12,7 @@ import {
 } from '@/lib/api';
 import { clearAlertToken, getAlertToken } from '@/lib/alert-token';
 import type { Alert, AlertFormState, FacetsResponse, Sector } from '@/lib/types';
-import { parseOptionalCop } from '@/lib/format';
+import { formatDate, formatRelativeAge, parseOptionalCop } from '@/lib/format';
 import { segmentOptionLabel } from '@/lib/unspsc';
 
 function alertToForm(alert: Alert): AlertFormState {
@@ -39,6 +39,14 @@ function readCachedAlert(id: string): Alert | null {
   }
 }
 
+function lastSentLabel(iso: string | null): string {
+  if (!iso) return 'Sin envíos aún';
+  const ms = new Date(iso).getTime();
+  if (Number.isNaN(ms)) return 'Sin envíos aún';
+  const seconds = Math.max(0, Math.floor((Date.now() - ms) / 1000));
+  return formatRelativeAge(seconds);
+}
+
 export default function ManageAlertPage() {
   const params = useParams();
   const router = useRouter();
@@ -46,6 +54,7 @@ export default function ManageAlertPage() {
   const [token, setToken] = useState<string | null>(null);
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [facets, setFacets] = useState<FacetsResponse | null>(null);
+  const [alert, setAlert] = useState<Alert | null>(null);
   const [form, setForm] = useState<AlertFormState | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -61,7 +70,10 @@ export default function ManageAlertPage() {
       return;
     }
     const cached = readCachedAlert(id);
-    if (cached) setForm(alertToForm(cached));
+    if (cached) {
+      setAlert(cached);
+      setForm(alertToForm(cached));
+    }
 
     Promise.all([getSectors(), getFacets()])
       .then(([s, f]) => {
@@ -94,6 +106,7 @@ export default function ManageAlertPage() {
         min_score: form.min_score,
       });
       sessionStorage.setItem(`alert-preview:${id}`, JSON.stringify(updated));
+      setAlert(updated);
       setForm(alertToForm(updated));
       setMessage('Alerta actualizada.');
     } catch (err) {
@@ -143,7 +156,7 @@ export default function ManageAlertPage() {
   if (!token || (error && !form)) {
     return (
       <div className="mx-auto max-w-md space-y-4">
-        <p className="text-red-300">{error ?? 'Acceso denegado'}</p>
+        <p className="text-[var(--c-danger)]">{error ?? 'Acceso denegado'}</p>
         <Link href="/" className="text-[var(--color-accent)] hover:underline">
           Ir a la búsqueda
         </Link>
@@ -169,8 +182,50 @@ export default function ManageAlertPage() {
       <Link href="/" className="text-sm text-[var(--color-accent)] hover:underline">
         ← Búsqueda
       </Link>
-      <h1 className="text-xl font-bold">Gestionar alerta</h1>
-      <p className="text-sm text-[var(--color-text-muted)]">{form.email}</p>
+      <header className="space-y-2">
+        <h1 className="text-xl font-bold">Gestionar alerta</h1>
+        <p className="text-sm text-[var(--color-text-muted)]">{form.email}</p>
+      </header>
+
+      {alert && (
+        <dl className="grid gap-2 rounded-lg border border-[var(--color-surface-border)] bg-[var(--color-surface-raised)] p-4 text-sm sm:grid-cols-2">
+          <div>
+            <dt className="text-xs text-[var(--color-text-muted)]">Estado</dt>
+            <dd>
+              <span
+                className={
+                  alert.verified
+                    ? 'inline-flex items-center gap-1.5 rounded-full bg-[var(--c-success-soft)] px-2 py-0.5 text-xs font-medium text-[var(--c-success)]'
+                    : 'inline-flex items-center gap-1.5 rounded-full bg-[var(--c-accent-soft)] px-2 py-0.5 text-xs font-medium text-[var(--c-accent-fg)]'
+                }
+              >
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{
+                    background: alert.verified ? 'var(--c-success)' : 'var(--c-warning)',
+                  }}
+                />
+                {alert.verified ? 'Verificada' : 'Sin verificar'}
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs text-[var(--color-text-muted)]">Creada</dt>
+            <dd>{formatDate(alert.created_at)}</dd>
+          </div>
+          <div className="sm:col-span-2">
+            <dt className="text-xs text-[var(--color-text-muted)]">Último envío</dt>
+            <dd>{lastSentLabel(alert.last_sent_at)}</dd>
+          </div>
+          <div className="sm:col-span-2">
+            <dt className="text-xs text-[var(--color-text-muted)]">ID de alerta</dt>
+            <dd className="break-all font-mono text-xs text-[var(--color-text-muted)]">
+              {alert.id}
+            </dd>
+          </div>
+        </dl>
+      )}
 
       <form onSubmit={handleSave} className="space-y-4 text-sm">
         <label className="block">
@@ -260,13 +315,13 @@ export default function ManageAlertPage() {
           />
         </label>
 
-        {message && <p className="text-green-400">{message}</p>}
-        {error && <p className="text-red-400">{error}</p>}
+        {message && <p className="text-[var(--c-success)]">{message}</p>}
+        {error && <p className="text-[var(--c-danger)]">{error}</p>}
 
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-lg bg-[var(--color-accent)] py-2 text-white disabled:opacity-50"
+          className="w-full rounded-lg bg-[var(--color-accent)] py-2 font-medium text-[var(--c-primary-fg)] hover:bg-[var(--c-primary-hover)] disabled:opacity-50"
         >
           {saving ? 'Guardando…' : 'Guardar cambios'}
         </button>
@@ -275,7 +330,7 @@ export default function ManageAlertPage() {
       <button
         type="button"
         onClick={handleDelete}
-        className="text-sm text-red-400 hover:underline"
+        className="text-sm text-[var(--c-danger)] hover:underline"
       >
         Eliminar alerta
       </button>

@@ -135,7 +135,7 @@ export function SearchView() {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-[var(--color-accent)] px-6 py-2.5 font-medium text-white disabled:opacity-50 sm:shrink-0"
+            className="rounded-lg bg-[var(--color-accent)] px-6 py-2.5 font-medium text-[var(--c-primary-fg)] hover:bg-[var(--c-primary-hover)] disabled:opacity-50 sm:shrink-0"
           >
             {loading ? 'Buscando…' : 'Buscar'}
           </button>
@@ -251,7 +251,7 @@ export function SearchView() {
           <button
             type="button"
             onClick={() => openAlert()}
-            className="w-full rounded-lg border border-[var(--color-success)] py-2 text-sm text-[var(--color-success)] hover:bg-green-950/30"
+            className="w-full rounded-lg border border-[var(--color-success)] py-2 text-sm text-[var(--color-success)] hover:bg-[var(--c-success-soft)]"
           >
             + Alerta con estos filtros
           </button>
@@ -259,7 +259,7 @@ export function SearchView() {
 
         <section>
           {error && (
-            <p className="mb-4 rounded-lg bg-red-950/40 px-4 py-3 text-sm text-red-300">{error}</p>
+            <p className="mb-4 rounded-lg bg-[var(--c-danger-soft)] px-4 py-3 text-sm text-[var(--c-danger)]">{error}</p>
           )}
 
           {loading && (
