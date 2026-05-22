@@ -10,18 +10,22 @@ import {
   type ApiRequestLogEntry,
 } from '@/lib/api-request-log';
 
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '0.0.0.0']);
+
 /** Panel flotante opcional (dev / NEXT_PUBLIC_API_DEBUG) en rutas fuera de búsqueda. */
 export function ApiDebugPanel() {
   const [open, setOpen] = useState(false);
   const [log, setLog] = useState<readonly ApiRequestLogEntry[]>([]);
+  const [isLocal, setIsLocal] = useState(false);
 
   useEffect(() => {
     if (!isApiLogEnabled()) return;
+    setIsLocal(LOCAL_HOSTS.has(window.location.hostname));
     setLog(getApiRequestLog());
     return subscribeApiRequestLog(() => setLog(getApiRequestLog()));
   }, []);
 
-  if (!isApiLogEnabled()) return null;
+  if (!isApiLogEnabled() || !isLocal) return null;
 
   return (
     <div className="fixed bottom-4 right-4 z-[100] max-w-sm text-xs">
