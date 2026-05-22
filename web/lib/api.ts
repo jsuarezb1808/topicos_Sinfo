@@ -9,7 +9,7 @@ import type {
   Sector,
   Tender,
 } from './types';
-import { isGetDebugEnabled, pushGetLog } from './api-get-log';
+import { pushApiRequestLog } from './api-request-log';
 
 function baseUrl(): string {
   const url = process.env.NEXT_PUBLIC_API_BASE;
@@ -40,6 +40,18 @@ async function readJsonBody(res: Response): Promise<unknown> {
   }
 }
 
+function parseRequestBody(body: BodyInit | null | undefined): unknown | null {
+  if (body == null) return null;
+  if (typeof body === 'string') {
+    try {
+      return JSON.parse(body) as unknown;
+    } catch {
+      return body;
+    }
+  }
+  return { _note: 'non-JSON body' };
+}
+
 function throwApiError(body: unknown, status: number): never {
   const err = body as ApiError;
   throw new ApiClientError(
@@ -49,118 +61,107 @@ function throwApiError(body: unknown, status: number): never {
   );
 }
 
-/** GET requests with optional debug logging (console + in-app panel). */
-async function fetchApiGet<T>(path: string): Promise<T> {
+/** Todas las peticiones al backend: registra request, fecha y response. */
+async function fetchLogged<T>(path: string, init?: RequestInit): Promise<T> {
+  const method = (init?.method ?? 'GET').toUpperCase();
   const url = `${baseUrl()}${path}`;
   const at = new Date().toISOString();
+  const request = parseRequestBody(init?.body ?? null);
 
   let res: Response;
   try {
     res = await fetch(url, {
-      method: 'GET',
-      headers: { 'content-type': 'application/json' },
+      ...init,
+      method,
+      headers: {
+        'content-type': 'application/json',
+        ...init?.headers,
+      },
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    if (isGetDebugEnabled()) {
-      pushGetLog({
-        path,
-        url,
-        status: 0,
-        ok: false,
-        at,
-        body: null,
-        error: message,
-      });
-    }
+    pushApiRequestLog({
+      method,
+      path,
+      url,
+      request,
+      response: null,
+      status: 0,
+      ok: false,
+      at,
+      error: message,
+    });
     throw e;
   }
 
-  const body = await readJsonBody(res);
+  const response = await readJsonBody(res);
 
-  if (isGetDebugEnabled()) {
-    pushGetLog({
-      path,
-      url,
-      status: res.status,
-      ok: res.ok,
-      at,
-      body,
-    });
-  }
-
-  if (!res.ok) throwApiError(body, res.status);
-  return body as T;
-}
-
-async function parseResponse<T>(res: Response): Promise<T> {
-  const body = await readJsonBody(res);
-  if (!res.ok) throwApiError(body, res.status);
-  return body as T;
-}
-
-async function fetchApi<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${baseUrl()}${path}`, {
-    ...init,
-    headers: {
-      'content-type': 'application/json',
-      ...init?.headers,
-    },
+  pushApiRequestLog({
+    method,
+    path,
+    url,
+    request,
+    response,
+    status: res.status,
+    ok: res.ok,
+    at,
   });
-  return parseResponse<T>(res);
+
+  if (!res.ok) throwApiError(response, res.status);
+  return response as T;
 }
 
 export function getSectors() {
-  return fetchApiGet<{ sectors: Sector[] }>('/v1/sectors');
+  return fetchLogged<{ sectors: Sector[] }>('/v1/sectors');
 }
 
 export function getFacets() {
-  return fetchApiGet<FacetsResponse>('/v1/facets');
+  return fetchLogged<FacetsResponse>('/v1/facets');
 }
 
 export function getHealth() {
-  return fetchApiGet<HealthResponse>('/v1/health');
+  return fetchLogged<HealthResponse>('/v1/health');
 }
 
 export function search(body: SearchRequest) {
-  return fetchApi<SearchResponse>('/v1/search', {
+  return fetchLogged<SearchResponse>('/v1/search', {
     method: 'POST',
     body: JSON.stringify(body),
   });
 }
 
 export function getTender(id: string) {
-  return fetchApiGet<Tender>(`/v1/tenders/${encodeURIComponent(id)}`);
+  return fetchLogged<Tender>(`/v1/tenders/${encodeURIComponent(id)}`);
 }
 
 export function createAlert(body: AlertCreateRequest) {
-  return fetchApi<{ ok: true; message: string }>('/v1/alerts', {
+  return fetchLogged<{ ok: true; message: string }>('/v1/alerts', {
     method: 'POST',
     body: JSON.stringify(body),
   });
 }
 
 export function verifyAlert(token: string) {
-  return fetchApiGet<{ ok: true; alert: Alert }>(
+  return fetchLogged<{ ok: true; alert: Alert }>(
     `/v1/alerts/verify?token=${encodeURIComponent(token)}`,
   );
 }
 
 export function unsubscribeAlert(token: string) {
-  return fetchApiGet<{ ok: true }>(
+  return fetchLogged<{ ok: true }>(
     `/v1/alerts/unsubscribe?token=${encodeURIComponent(token)}`,
   );
 }
 
 export function patchAlert(id: string, token: string, body: Partial<AlertCreateRequest>) {
-  return fetchApi<Alert>(
+  return fetchLogged<Alert>(
     `/v1/alerts/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`,
     { method: 'PATCH', body: JSON.stringify(body) },
   );
 }
 
 export function deleteAlert(id: string, token: string) {
-  return fetchApi<{ ok: true }>(
+  return fetchLogged<{ ok: true }>(
     `/v1/alerts/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`,
     { method: 'DELETE' },
   );
