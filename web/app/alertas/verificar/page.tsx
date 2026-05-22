@@ -85,7 +85,7 @@ function VerifyContent() {
         type="button"
         onClick={handleConfirm}
         disabled={status === 'loading'}
-        className="rounded-lg bg-[var(--color-success)] px-6 py-2.5 font-medium text-[var(--c-fg-on-primary)] disabled:opacity-50"
+        className="rounded-lg bg-[var(--color-success)] px-6 py-2.5 font-medium text-[var(--c-on-success)] disabled:opacity-50"
       >
         {status === 'loading' ? 'Confirmando…' : 'Confirmar mi alerta'}
       </button>

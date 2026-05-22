@@ -67,14 +67,17 @@
   --c-accent-hover:  var(--c-amber-500);
   --c-accent-soft:   var(--c-amber-100);
   --c-accent-fg:     var(--c-niebla-900);
+  --c-accent-soft-fg: var(--c-amber-700);
 
   --c-link:          var(--c-indigo-500);
   --c-focus-ring:    color-mix(in oklab, var(--c-indigo-500) 50%, transparent);
 
   --c-success:       var(--c-selva-500);
   --c-success-soft:  var(--c-selva-100);
+  --c-on-success:    var(--c-niebla-0);
   --c-danger:        var(--c-coral-500);
   --c-danger-soft:   var(--c-coral-100);
+  --c-on-danger:     var(--c-niebla-0);
   --c-warning:       var(--c-amber-500);
 
   /* --- Type --- */
@@ -125,12 +128,18 @@
   --c-accent-hover:  var(--c-amber-200);
   --c-accent-soft:   #3A2A0E;
   --c-accent-fg:     #0E1230;
+  --c-accent-soft-fg: var(--c-amber-200);
 
   --c-link:          var(--c-indigo-300);
   --c-focus-ring:    color-mix(in oklab, var(--c-indigo-300) 60%, transparent);
 
+  --c-success:       #5FCB94;
   --c-success-soft:  #0F3324;
+  --c-on-success:    var(--c-niebla-900);
+  --c-danger:        #F1907A;
   --c-danger-soft:   #3A1C16;
+  --c-on-danger:     var(--c-niebla-900);
+  --c-warning:       var(--c-amber-300);
 
   --c-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --c-shadow:    0 4px 12px rgba(0, 0, 0, 0.45);
@@ -161,12 +170,18 @@
     --c-accent-hover:  var(--c-amber-200);
     --c-accent-soft:   #3A2A0E;
     --c-accent-fg:     #0E1230;
+    --c-accent-soft-fg: var(--c-amber-200);
 
     --c-link:          var(--c-indigo-300);
     --c-focus-ring:    color-mix(in oklab, var(--c-indigo-300) 60%, transparent);
 
+    --c-success:       #5FCB94;
     --c-success-soft:  #0F3324;
+    --c-on-success:    var(--c-niebla-900);
+    --c-danger:        #F1907A;
     --c-danger-soft:   #3A1C16;
+    --c-on-danger:     var(--c-niebla-900);
+    --c-warning:       var(--c-amber-300);
 
     --c-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --c-shadow:    0 4px 12px rgba(0, 0, 0, 0.45);

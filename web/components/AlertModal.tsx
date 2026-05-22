@@ -261,7 +261,7 @@ export function AlertModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-[var(--color-success)] py-2.5 font-medium text-[var(--c-fg-on-primary)] disabled:opacity-50"
+              className="w-full rounded-lg bg-[var(--color-success)] py-2.5 font-medium text-[var(--c-on-success)] disabled:opacity-50"
             >
               {loading ? 'Enviando…' : 'Crear alerta'}
             </button>

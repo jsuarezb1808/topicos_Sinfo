@@ -66,7 +66,7 @@ function UnsubscribeContent() {
         type="button"
         onClick={handleUnsubscribe}
         disabled={status === 'loading'}
-        className="rounded-lg bg-[var(--c-danger)] px-6 py-2.5 font-medium text-[var(--c-fg-on-primary)] hover:opacity-90 disabled:opacity-50"
+        className="rounded-lg bg-[var(--c-danger)] px-6 py-2.5 font-medium text-[var(--c-on-danger)] hover:opacity-90 disabled:opacity-50"
       >
         {status === 'loading' ? 'Procesando…' : 'Confirmar desuscripción'}
       </button>

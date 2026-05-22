@@ -196,7 +196,7 @@ export default function ManageAlertPage() {
                 className={
                   alert.verified
                     ? 'inline-flex items-center gap-1.5 rounded-full bg-[var(--c-success-soft)] px-2 py-0.5 text-xs font-medium text-[var(--c-success)]'
-                    : 'inline-flex items-center gap-1.5 rounded-full bg-[var(--c-accent-soft)] px-2 py-0.5 text-xs font-medium text-[var(--c-accent-fg)]'
+                    : 'inline-flex items-center gap-1.5 rounded-full bg-[var(--c-accent-soft)] px-2 py-0.5 text-xs font-medium text-[var(--c-accent-soft-fg)]'
                 }
               >
                 <span

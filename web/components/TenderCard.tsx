@@ -60,7 +60,7 @@ export function TenderCard({
         )}
         {hit.fase && (
           <span
-            className="rounded bg-[var(--c-accent-soft)] px-2 py-1 text-[var(--c-accent-fg)]"
+            className="rounded bg-[var(--c-accent-soft)] px-2 py-1 text-[var(--c-accent-soft-fg)]"
             title="Fase del proceso"
           >
             {hit.fase}
@@ -76,7 +76,7 @@ export function TenderCard({
             className={`rounded px-2 py-1 ${
               deadline.includes('vencido')
                 ? 'bg-[var(--c-danger-soft)] text-[var(--c-danger)]'
-                : 'bg-[var(--c-accent-soft)] text-[var(--c-accent-fg)]'
+                : 'bg-[var(--c-accent-soft)] text-[var(--c-accent-soft-fg)]'
             }`}
           >
             {deadline}
