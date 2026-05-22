@@ -211,6 +211,11 @@ button {
   color: inherit;
 }
 
+button {
+  font-family: inherit;
+  color: white;
+}
+
 :focus-visible {
   outline: 2px solid var(--c-focus-ring);
   outline-offset: 2px;
