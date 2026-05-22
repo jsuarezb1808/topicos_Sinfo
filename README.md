@@ -4,7 +4,7 @@
 **Buscador:** https://topicos-sinfo.vercel.app  
 **Backend:** https://github.com/latincrow81/api_sisinfo_cecop
 
-**Equipo:** Maurico Escudero · Jhesid Suarez · Juan Salas · Laura Marin
+**Equipo:** Mauricio Escudero · Jhesid Suarez · Juan Salas · Laura Marin
 ---
 
 ## Problema y usuario
